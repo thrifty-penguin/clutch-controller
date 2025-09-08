@@ -1,0 +1,19 @@
+2025-09-08 14:11:22.743 | INFO     | __main__:main:35 - Starting Data Time-Alignment.
+2025-09-08 14:11:22.743 | INFO     | __main__:main:38 - Source directory set to data/amt_aligned.
+2025-09-08 14:11:22.743 | INFO     | __main__:main:43 - Dump directory set to data/amt_processed.
+2025-09-08 14:11:22.743 | INFO     | __main__:main:51 - 7 file(s) loaded from data/amt_aligned
+2025-09-08 14:11:22.874 | INFO     | __main__:calc_params:14 - Calculating vehicle parameters for g90amt_clt_dc_1.csv.
+2025-09-08 14:11:23.801 | SUCCESS  | __main__:main:56 - Processed file saved to data/amt_processed/g90amt_clt_dc_1_processed.csv
+2025-09-08 14:11:23.919 | INFO     | __main__:calc_params:14 - Calculating vehicle parameters for g90amt_clt_dc_2.csv.
+2025-09-08 14:11:24.650 | SUCCESS  | __main__:main:56 - Processed file saved to data/amt_processed/g90amt_clt_dc_2_processed.csv
+2025-09-08 14:11:24.800 | INFO     | __main__:calc_params:14 - Calculating vehicle parameters for g90amt_clt_dc_3.csv.
+2025-09-08 14:11:26.179 | SUCCESS  | __main__:main:56 - Processed file saved to data/amt_processed/g90amt_clt_dc_3_processed.csv
+2025-09-08 14:11:26.299 | INFO     | __main__:calc_params:14 - Calculating vehicle parameters for g90amt_Clt_Launches_G90.csv.
+2025-09-08 14:11:27.393 | SUCCESS  | __main__:main:56 - Processed file saved to data/amt_processed/g90amt_Clt_Launches_G90_processed.csv
+2025-09-08 14:11:27.415 | INFO     | __main__:calc_params:14 - Calculating vehicle parameters for g90amt_Launches only_clt_Hosur_Thoppur.csv.
+2025-09-08 14:11:27.483 | SUCCESS  | __main__:main:56 - Processed file saved to data/amt_processed/g90amt_Launches only_clt_Hosur_Thoppur_processed.csv
+2025-09-08 14:11:27.622 | INFO     | __main__:calc_params:14 - Calculating vehicle parameters for g90amt_OnRoad_Trials_Hosur_G90.csv.
+2025-09-08 14:11:28.907 | SUCCESS  | __main__:main:56 - Processed file saved to data/amt_processed/g90amt_OnRoad_Trials_Hosur_G90_processed.csv
+2025-09-08 14:11:28.934 | INFO     | __main__:calc_params:14 - Calculating vehicle parameters for g90amt_PwrModeData.csv.
+2025-09-08 14:11:29.054 | SUCCESS  | __main__:main:56 - Processed file saved to data/amt_processed/g90amt_PwrModeData_processed.csv
+2025-09-08 14:11:29.055 | SUCCESS  | __main__:<module>:70 - Vehicle Parameter Calculations Complete.
