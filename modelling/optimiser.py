@@ -70,7 +70,7 @@ def main():
 
     df_test = pd.concat([df2, df1], ignore_index=True)
 
-    from regModel import feature_vectors, aggregator
+    from modelling.train_model import feature_vectors, aggregator
     event_vectors = feature_vectors(df_test, 'EngagementEvents', 'ClutchCval', 'EventTime')
     event_params = aggregator(df_test, 'EngagementEvents', ['EngTrq', 'EngSpd', 'tmpCltActTC', 'CurrGr', 'Calc_VehSpd'], 'EventTime')
 

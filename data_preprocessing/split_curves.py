@@ -9,8 +9,6 @@ from rich.progress import Progress
 from loguru import logger
 import os
 
-
-
 def find_curves(files: list, source_dir: str) -> pd.DataFrame:
     if not files:
         logger.error('No files were provided to process.')
@@ -18,8 +16,6 @@ def find_curves(files: list, source_dir: str) -> pd.DataFrame:
     
     full_curve_lst = []
     offset = 0
-
-
 
     for file_name in files:
         if not os.path.exists(f'{source_dir}/{file_name}'):
