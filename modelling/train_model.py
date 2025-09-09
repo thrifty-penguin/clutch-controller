@@ -1,4 +1,6 @@
-# train_model.py
+#Trains a classifier model that sorts curves into clusters
+#Use ONLY AFTER running split_curves.py
+#Pipeline Step 5 of 7
 
 import numpy as np
 import pandas as pd
@@ -15,6 +17,7 @@ from scipy.signal import find_peaks
 from loguru import logger
 from rich.traceback import install
 from scipy.interpolate import CubicSpline
+from rich.progress import Progress
 import scienceplots
 
 def feature_vectors(df: pd.DataFrame, identifier_col: str, target_col: str, time_col: str, points_per_curve: int = 100) -> dict:
@@ -42,11 +45,11 @@ def feature_vectors(df: pd.DataFrame, identifier_col: str, target_col: str, time
     logger.success(f"Successfully created {len(event_vectors)} feature vectors.")
     return event_vectors
 
-def aggregator(df: pd.DataFrame, identifier_col: str, input_features: list, time_col: str) -> pd.DataFrame:
+def aggregator(df: pd.DataFrame, identifier_col: str, input_featureset: list, time_col: str) -> pd.DataFrame:
     logger.info("Aggregating initial event parameters...")
     aggregations = {
         feature: ['mean', 'std', ('q25', lambda x: x.quantile(0.25)), ('q75', lambda x: x.quantile(0.75)), 'first'] 
-        for feature in input_features
+        for feature in input_featureset
     }
     
     event_parameters_df = df.groupby(identifier_col).agg(aggregations)
@@ -109,9 +112,9 @@ def train_tune(X_train, y_train, X_val, y_val, n_trials=50) -> xgb.XGBClassifier
             'eval_metric': 'mlogloss',
             'random_state': 42,
             'num_class': len(np.unique(y_train)),
-            'n_estimators': trial.suggest_int('n_estimators', 200, 1000),
-            'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.3),
-            'max_depth': trial.suggest_int('max_depth', 4, 10),
+            'n_estimators': trial.suggest_int('n_estimators', 100, 1000),
+            'learning_rate': trial.suggest_float('learning_rate', 0.001, 0.3, log=True),
+            'max_depth': trial.suggest_int('max_depth', 4, 12),
             'subsample': trial.suggest_float('subsample', 0.6, 1.0),
             'colsample_bytree': trial.suggest_float('colsample_bytree', 0.6, 1.0),
             'gamma': trial.suggest_float('gamma', 0, 5),
@@ -124,7 +127,7 @@ def train_tune(X_train, y_train, X_val, y_val, n_trials=50) -> xgb.XGBClassifier
         
         return accuracy_score(y_val, model.predict(X_val))
 
-    study = optuna.create_study(direction='maximize')
+    study = optuna.create_study(direction='maximize', study_name='Clutch Clustering')
     study.optimize(objective, n_trials=n_trials)
     
     logger.info(f"Optuna study complete. Best validation accuracy: {study.best_value:.4f}")
@@ -137,18 +140,18 @@ def train_tune(X_train, y_train, X_val, y_val, n_trials=50) -> xgb.XGBClassifier
 
 def main():
     # --- Configuration ---
-    TRAIN_SET_PATH = r'data\amt_train_test\g90amt_trainset.csv'
-    MODEL_SAVE_PATH = r'teacher_model/models/xgb_clutch_profile_model.joblib'
-    SCALER_SAVE_PATH = r'teacher_model/models/curve_feature_scaler.joblib'
-    INPUT_FEATURES = ['EngTrq', 'EngSpd', 'tmpCltActTC', 'CurrGr', 'Calc_VehSpd']
-    TIME_COL = 'EventTime'
-    TARGET_COL = 'ClutchCval'
-    IDENTIFIER_COL = 'EngagementEvents'
-    df1 = pd.read_csv(r'data\amt_train_test\g90amt_testset.csv')
-    df2 = pd.read_csv(TRAIN_SET_PATH)
+    train_set_path = r'data\amt_train_test\g90amt_train_set.csv'
+    model_save_path = r'teacher_model/models/xgb_clutch_profile_model.joblib'
+    scaler_save_path = r'teacher_model/models/curve_feature_scaler.joblib'
+    input_featureset = ['EngTrq', 'EngSpd', 'tmpCltActTC', 'CurrGr', 'Calc_VehSpd']
+    time_col = 'EventTime'
+    target_col = 'ClutchCval'
+    identifier_col = 'EngagementEvents'
+    df1 = pd.read_csv(r'data\amt_train_test\g90amt_test_set.csv')
+    df2 = pd.read_csv(train_set_path)
     df_train = pd.concat([df2, df1], ignore_index=True)
-    event_vectors = feature_vectors(df_train, IDENTIFIER_COL, TARGET_COL, TIME_COL)
-    event_params = aggregator(df_train, IDENTIFIER_COL, INPUT_FEATURES, TIME_COL)
+    event_vectors = feature_vectors(df_train, identifier_col, target_col, time_col)
+    event_params = aggregator(df_train, identifier_col, input_featureset, time_col)
     
     cluster_labels, feature_scaler = cluster(event_vectors)
     
@@ -164,15 +167,18 @@ def main():
     final_model = train_tune(X_train, y_train, X_val, y_val, n_trials=50)
     
     # --- Save Artifacts ---
-    joblib.dump(final_model, MODEL_SAVE_PATH)
-    logger.success(f"Trained model saved to: {MODEL_SAVE_PATH}")
-    joblib.dump(feature_scaler, SCALER_SAVE_PATH)
-    logger.success(f"Feature scaler saved to: {SCALER_SAVE_PATH}")
+    joblib.dump(final_model, model_save_path)
+    logger.success(f"Trained model saved to: {model_save_path}")
+    joblib.dump(feature_scaler, scaler_save_path)
+    logger.success(f"Feature scaler saved to: {scaler_save_path}")
 
 if __name__ == '__main__':
-    logger.remove()
-    logger.add("logs/training_pipeline.log", rotation="5 MB", level="INFO")
-    logger.add(lambda msg: print(msg, end=""), format="{message}", level="INFO")
-    install(show_locals=False, word_wrap=True, width=120)
-    
-    main()
+    with Progress() as progress:
+        logger.remove()
+        logger.add("logs/train_model.log", rotation="5 MB", level="INFO")
+        install(show_locals=False, word_wrap=True, width=120)
+        task = progress.add_task("[cyan] Training Clutch Classification Model...", total=None)
+        main()
+        progress.update(task, completed=progress.tasks[0].total)
+        print(f"Engagement Recognition complete.") 
+        logger.success("Engagement Recognition complete.")
