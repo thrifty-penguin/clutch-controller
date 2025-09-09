@@ -47,6 +47,7 @@ def find_curves(files: list, source_dir: str) -> pd.DataFrame:
         time_diff = curves['Time'].diff().fillna(0)
         
         curves['EngagementEvents'] = (time_diff > 0.015).cumsum() + offset
+        curves['EventTime'] = curves.groupby('EngagementEvents')['Time'].transform(lambda x: round((x - x.iloc[0]),4))
         
         full_curve_lst.append(curves)
         
