@@ -40,3 +40,24 @@
 2025-09-09 11:27:44.489 | INFO     | __main__:find_curves:26 - Loaded g90amt_clt_dc_1_processed.csv
 2025-09-09 11:27:44.531 | SUCCESS  | __main__:find_curves:56 - Identified 134 engagement events in g90amt_clt_dc_1_processed.csv.
 2025-09-09 11:27:45.656 | SUCCESS  | __main__:<module>:107 - Engagement Recognition complete.
+2025-09-09 11:29:26.648 | INFO     | __main__:main:61 - Identifying Clutch Engagement/Disengagement Events...
+2025-09-09 11:29:26.648 | INFO     | __main__:main:63 - Source directory set to data/amt_processed.
+2025-09-09 11:29:26.648 | INFO     | __main__:main:68 - Dump directory set to data/amt_train_test.
+2025-09-09 11:29:26.648 | INFO     | __main__:main:76 - 7 file(s) loaded from data/amt_processed
+2025-09-09 11:29:26.648 | INFO     | __main__:main:79 - Test file selected: ['g90amt_clt_dc_1_processed.csv']
+2025-09-09 11:29:26.648 | INFO     | __main__:main:81 - Training files selected: ['g90amt_clt_dc_2_processed.csv', 'g90amt_clt_dc_3_processed.csv', 'g90amt_Clt_Launches_G90_processed.csv', 'g90amt_Launches only_clt_Hosur_Thoppur_processed.csv', 'g90amt_OnRoad_Trials_Hosur_G90_processed.csv', 'g90amt_PwrModeData_processed.csv']
+2025-09-09 11:29:26.825 | INFO     | __main__:find_curves:26 - Loaded g90amt_clt_dc_2_processed.csv
+2025-09-09 11:29:26.873 | SUCCESS  | __main__:find_curves:56 - Identified 144 engagement events in g90amt_clt_dc_2_processed.csv.
+2025-09-09 11:29:27.074 | INFO     | __main__:find_curves:26 - Loaded g90amt_clt_dc_3_processed.csv
+2025-09-09 11:29:27.117 | SUCCESS  | __main__:find_curves:56 - Identified 126 engagement events in g90amt_clt_dc_3_processed.csv.
+2025-09-09 11:29:27.293 | INFO     | __main__:find_curves:26 - Loaded g90amt_Clt_Launches_G90_processed.csv
+2025-09-09 11:29:27.311 | SUCCESS  | __main__:find_curves:56 - Identified 67 engagement events in g90amt_Clt_Launches_G90_processed.csv.
+2025-09-09 11:29:27.329 | INFO     | __main__:find_curves:26 - Loaded g90amt_Launches only_clt_Hosur_Thoppur_processed.csv
+2025-09-09 11:29:27.329 | WARNING  | __main__:find_curves:29 - File g90amt_Launches only_clt_Hosur_Thoppur_processed.csv does not have Clutch Engagement Data. Skipping.
+2025-09-09 11:29:27.541 | INFO     | __main__:find_curves:26 - Loaded g90amt_OnRoad_Trials_Hosur_G90_processed.csv
+2025-09-09 11:29:27.541 | WARNING  | __main__:find_curves:29 - File g90amt_OnRoad_Trials_Hosur_G90_processed.csv does not have Clutch Engagement Data. Skipping.
+2025-09-09 11:29:27.568 | INFO     | __main__:find_curves:26 - Loaded g90amt_PwrModeData_processed.csv
+2025-09-09 11:29:27.569 | WARNING  | __main__:find_curves:29 - File g90amt_PwrModeData_processed.csv does not have Clutch Engagement Data. Skipping.
+2025-09-09 11:29:27.711 | INFO     | __main__:find_curves:26 - Loaded g90amt_clt_dc_1_processed.csv
+2025-09-09 11:29:27.730 | SUCCESS  | __main__:find_curves:56 - Identified 134 engagement events in g90amt_clt_dc_1_processed.csv.
+2025-09-09 11:29:28.934 | SUCCESS  | __main__:<module>:107 - Engagement Recognition complete.
