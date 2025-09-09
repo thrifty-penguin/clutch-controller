@@ -19,14 +19,14 @@ def find_curves(files: list, source_dir: str) -> pd.DataFrame:
 
     for file_name in files:
         if not os.path.exists(f'{source_dir}/{file_name}'):
-            logger.error(f"File not found: {file_name}")
+            logger.error(f'File not found: {file_name}')
             continue
             
         df = pd.read_csv(f'{source_dir}/{file_name}')
         logger.info(f'Loaded {file_name}')
 
         if 'ClutchCval' not in df.columns:
-            logger.warning(f"File {file_name} does not have Clutch Engagement Data. Skipping.")
+            logger.warning(f'File {file_name} does not have Clutch Engagement Data. Skipping.')
             continue
 
         if 'ClutchStat' not in df.columns:
@@ -40,7 +40,7 @@ def find_curves(files: list, source_dir: str) -> pd.DataFrame:
             curves = df[mask].copy()
         
         if curves.empty:
-            logger.warning(f"No engagement events found in {file_name}.")
+            logger.warning(f'No engagement events found in {file_name}.')
             continue
 
         curves = curves.reset_index(drop=True)
@@ -52,19 +52,19 @@ def find_curves(files: list, source_dir: str) -> pd.DataFrame:
         
         offset = curves['EngagementEvents'].max() + 1
 
-        logger.success(f"Identified {curves['EngagementEvents'].nunique()} engagement events in {file_name}.")
+        logger.success(f'Identified {curves['EngagementEvents'].nunique()} engagement events in {file_name}.')
         
     return pd.concat(full_curve_lst, ignore_index=True) if full_curve_lst else pd.DataFrame()
 
 def main():
-    logger.info("Identifying Clutch Engagement/Disengagement Events...")
+    logger.info('Identifying Clutch Engagement/Disengagement Events...')
     source_dir = 'data/amt_processed'
-    logger.info(f"Source directory set to {source_dir}.")
+    logger.info(f'Source directory set to {source_dir}.')
     os.makedirs(source_dir, exist_ok=True)
 
     dump_dir = 'data/amt_train_test'
     os.makedirs(dump_dir, exist_ok=True)
-    logger.info(f"Dump directory set to {dump_dir}.")
+    logger.info(f'Dump directory set to {dump_dir}.')
 
     tests = os.listdir(source_dir)
     tests = [f for f in tests if f.endswith('.csv')]
@@ -75,19 +75,19 @@ def main():
         logger.info(f'{len(tests)} file(s) loaded from {source_dir}')
 
     test_files = [tests[0]]
-    logger.info(f"Test file selected: {test_files}")
+    logger.info(f'Test file selected: {test_files}')
     train_files = tests[1:]
-    logger.info(f"Training files selected: {train_files}")
+    logger.info(f'Training files selected: {train_files}')
 
     train_set = find_curves(train_files, source_dir)
     test_set = find_curves(test_files, source_dir)
 
     if train_set.empty or test_set.empty:
-        logger.error("No engagement curves found in either train/test files.")
+        logger.error('No engagement curves found in either train/test files.')
         return None
     
-    train_set.to_csv(f'{dump_dir}/g90amt_train_set.csv', index=False)
-    test_set.to_csv(f'{dump_dir}/g90amt_test_set.csv', index=False)
+    train_set.to_csv(os.path.join(dump_dir,'g90amt_train_set.csv'), index=False)
+    test_set.to_csv(os.path.join(dump_dir,'g90amt_test_set.csv'), index=False)
     
 
     return dump_dir
@@ -95,12 +95,12 @@ def main():
 if __name__ =='__main__':
     with Progress() as progress:
         logger.remove()
-        logger.add("logs/split_curves.log", rotation="5 MB", level="INFO")
+        logger.add('logs/split_curves.log', rotation='5 MB', level='INFO')
 
 
         install(show_locals=True, word_wrap=True, width=120)
-        task = progress.add_task("[cyan] Identifying Clutch Engagement/Disengagement Events...", total=None)
+        task = progress.add_task('[cyan] Identifying Clutch Engagement/Disengagement Events...', total=None)
         dump_dir=main()
         progress.update(task, completed=progress.tasks[0].total)
-        print(f"Engagement Recognition complete.\nFiles saved to {dump_dir}.") 
-        logger.success("Engagement Recognition complete.")
+        print(f'Engagement Recognition complete.\nFiles saved to {dump_dir}.') 
+        logger.success('Engagement Recognition complete.')
