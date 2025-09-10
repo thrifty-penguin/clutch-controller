@@ -83,7 +83,7 @@ def cluster(splines: dict, max_k: int = 15) -> tuple:
     scaler = StandardScaler()
     features_scaled = scaler.fit_transform(feature_list)
     
-    best_score = -np.inf
+    best_score = -1.0
     optimal_k = 2
     
     logger.info(f'Determining optimal k by searching up to {max_k} clusters...')
@@ -139,7 +139,7 @@ def train_tune(X_train, y_train, X_val, y_val, n_trials=50) -> xgb.XGBClassifier
     logger.info(f'Optuna study complete. Best validation accuracy: {study.best_value:.4f}')
     logger.info(f'Best hyperparameters: {study.best_params}')
     
-    logger.info('--- Training Final Model with Optimal Hyperparameters ---')
+    logger.info('Training Final Model with Optimal Hyperparameters...')
     final_model = xgb.XGBClassifier(**study.best_params).fit(X_train, y_train, sample_weight=sample_weights)
     
     return final_model
@@ -152,7 +152,7 @@ def main():
     logger.info(f'Source directory set to {source_dir}.')
     os.makedirs(source_dir, exist_ok=True)
 
-    dump_dir = 'saved_models'
+    dump_dir = 'artifacts'
     os.makedirs(dump_dir, exist_ok=True)
     logger.info(f'Dump directory set to {dump_dir}.')
 
@@ -166,8 +166,6 @@ def main():
         logger.info(f'{len(source_files)} file(s) loaded from {source_dir}')
 
     df_train, df_test, df_combo = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
-
-
 
     for file_name in source_files:
         if 'train' in file_name:
@@ -188,7 +186,7 @@ def main():
     df_combo = pd.concat([df_train, df_test], ignore_index=True)
 
     MODES =['traintest', 'deploy']
-    MODE = MODES[0]
+    MODE = MODES[1]
     logger.info(f'Operating in {MODE} mode.')
 
     if MODE == 'deploy':
@@ -196,8 +194,7 @@ def main():
     else:
         df = df_train.copy()
 
-    model_save_path = r'teacher_model/models/xgb_clutch_profile_model.joblib'
-    scaler_save_path = r'teacher_model/models/curve_feature_scaler.joblib'
+
     input_featureset = ['EngTrq', 'EngSpd', 'tmpCltActTC', 'CurrGr', 'Calc_VehSpd']
     time_col = 'EventTime'
     target_col = 'ClutchCval'
@@ -220,9 +217,10 @@ def main():
     
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
     
-    final_model = train_tune(X_train, y_train, X_val, y_val, n_trials=250)
+    final_model = train_tune(X_train, y_train, X_val, y_val, n_trials=50)
     
-    # --- Save Artifacts ---
+    model_save_path = os.path.join(dump_dir,'model.joblib')
+    scaler_save_path = os.path.join(dump_dir,'scaler.joblib')
     joblib.dump(final_model, model_save_path)
     logger.success(f'Trained model saved to: {model_save_path}')
     joblib.dump(feature_scaler, scaler_save_path)
@@ -236,5 +234,5 @@ if __name__ == '__main__':
         task = progress.add_task('[cyan] Training Clutch Classification Model...', total=None)
         main()
         progress.update(task, completed=progress.tasks[0].total)
-        print(f'Engagement Recognition complete.') 
-        logger.success('Engagement Recognition complete.')
+        print(f'Model Training Complete') 
+        logger.success('Model Training Complete')
