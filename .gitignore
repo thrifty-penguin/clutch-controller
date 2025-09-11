@@ -2,3 +2,6 @@ logs/
 figures/
 artifacts/
 modelling/__pycache__/
+data/
+data_analysis/
+data_preprocessing/__pycache__/

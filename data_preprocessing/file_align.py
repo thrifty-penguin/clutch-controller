@@ -1,6 +1,6 @@
 #Time aligning all vehicle parameters from each test
 #Use ONLY AFTER running file_conv.py
-#Pipeline Step 2 of 7
+#Pipeline Step 2 of 8
 
 import os
 import numpy as np
@@ -11,6 +11,17 @@ from rich.progress import Progress
 from loguru import logger
 
 def time_align(test_name : str, source_dir : str, time_step: float = 0.01) -> pd.DataFrame:
+    '''
+    Aligns all vehicle parameters from a given test to a common time vector using linear interpolation.
+
+    Parameters:
+        test_name (str): Name of the test to be processed.
+        source_dir (str): Directory containing the test CSV files.
+        time_step (float): Time step for the common time vector in seconds.
+
+    Returns:
+        pd.DataFrame: A DataFrame containing the time-aligned vehicle parameters.
+    '''
     source_dir = f'data/amt_csv/{test_name}'
     os.makedirs(source_dir, exist_ok=True)
 
@@ -86,7 +97,7 @@ def time_align(test_name : str, source_dir : str, time_step: float = 0.01) -> pd
     return aligned_df
     
 def main():
-    logger.info("Starting the time-alignment of induvidual tests.")
+    logger.info("Starting the time-alignment of individual tests.")
 
     source_dir = 'data/amt_csv'
     logger.info(f"Input directory set to {source_dir}.")

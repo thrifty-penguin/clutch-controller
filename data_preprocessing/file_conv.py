@@ -1,5 +1,5 @@
 #Convert MATLAB .mat files to .csv files
-#Pipeline Step 1 of 7
+#Pipeline Step 1 of 8
 
 import h5py
 import numpy as np
@@ -10,6 +10,18 @@ from rich.progress import Progress
 from loguru import logger
 
 def mat_to_csv(mat_name: str, source_dir: str = 'data/amt_raw', dump_dir: str = 'data/amt_csv') -> None:
+    '''
+    A function to convert MATLAB .mat files to .csv files.
+
+    Parameters:
+        mat_name (str): The name of the .mat file to be converted.
+        source_dir (str): The directory where the .mat files are located. Default is 'data/amt_raw'.
+        dump_dir (str): The directory where the converted .csv files will be saved. Default is 'data/amt_csv'.
+
+    Returns:
+        None
+    '''
+
     testdata={}
     mat_path = os.path.join(source_dir, mat_name)
     logger.info(f'Processing {mat_path}.')
