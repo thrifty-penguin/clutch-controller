@@ -1,6 +1,6 @@
 # Adaptive Clutch Modulator
 
-This project presents a data-driven approach to developing an adaptive clutch engagement controller. It leverages machine learning to analyse real-world driving data, identify distinct clutch engagement profiles, and build a predictive model that selects the optimal clutch modulation strategy based on initial vehicle conditions.
+This project presents a data-driven approach to developing an adaptive clutch engagement controller. It leverages machine learning to analyse real-world driving data from an AMT, identify distinct clutch engagement profiles, and build a predictive model that selects the optimal clutch modulation strategy based on initial vehicle conditions for manual transmissions.
 
 The final output is a simulated real-time controller that can intelligently modulate clutch engagement to balance ride comfort (low jerk) and component longevity (low wear).
 
